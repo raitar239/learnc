@@ -1,4 +1,4 @@
-// Quick sort numbers
+// Quick sort 
 void quickSort(int arr[], int low, int high) {
     if (low < high) {
         int pivot = arr[high];
