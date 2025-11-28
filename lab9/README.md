@@ -299,6 +299,7 @@ GIT
 
 ---
 
+<details>
 <summary>На 4*</summary>
 
 1-2. Create, add, commit.
@@ -332,4 +333,14 @@ GIT
 | * 120e6cc Change to HELLO
 |/  
 ```
-18. 
+18-19. Push all
+</details>
+
+---
+
+<summary>На 5</summary>
+
+1. Branch, switch to branch1
+2. `echo "This is a relevant fact" > file.txt`
+3. Commit Create file.txt
+4. 
