@@ -296,3 +296,26 @@ GIT
     ```
 23. Commit & push
 </details>
+
+---
+
+<summary>На 4*</summary>
+
+1-2. Create, add, commit.
+3. `git branch feature/uppercase`
+4. `git switch feature/uppercase`
+5. Status: `no changes added to commit (use "git add" and/or "git commit -a")`
+6-7. Change, add, commit
+8. `git branch`:
+```git
+* feature/uppercase
+  main
+  mybranch
+```
+9. `git log --oneline --graph –all`:
+```git
+* 120e6cc (HEAD -> feature/uppercase) Change to HELLO
+* 92505a8 (mybranch) Add content to greeting.txt
+* f4b3552 Add file greeting.txt
+```
+10. 
