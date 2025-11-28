@@ -390,4 +390,7 @@ Unmerged paths:
 
 <summary>На 5*</summary>
 
-1-2. Create, add, commit mergesort.py 
+1-2. Create, add, commit `mergesort.py` 
+3. branch, switch `Mergesort-Impl`
+4. Change `mergesort.py`
+5. Commit
