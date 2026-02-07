@@ -1,5 +1,9 @@
 # LABS in programming on C
 
-**First semester only**
+**One and two semesters**
 
-Labs 9 and 10 are done
+1 semester Labs:
+9, 10
+
+2 semester Labs:
+12
