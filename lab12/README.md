@@ -14,6 +14,12 @@ LIBS
 *measureSort* - считает время
 
 **Как запустить?**\
+with dynamic:
 '''gcc -c warehouse.c -o warehouse.o''' - компилирует в машинный код
 '''gcc -shared -o warehouse.dll warehouse.o''' - создает саму библиотеку
-'''gcc main.c -L. -lwarehouse -o program.exe''' - компилирует main.c и связывает с библиотекой
+'''gcc main.c -L. -lwarehouse -o dynamic.exe''' - компилирует main.c и связывает с библиотекой
+
+with static:
+''' gcc main.c warehouse.c -c '''
+''' ar r libMY_LOG.a warehouse.o main.o'''
+''' gcc main.o -L. -lMY_LOG -o static'''
