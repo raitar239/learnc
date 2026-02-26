@@ -16,3 +16,23 @@ make
 make clean
 
 **На 4**\
+Выбор библиотеки через -DBUILD_SHARED_LIBS= (по умолчанию on)
+
+Запуск с **динамической**:
+cmake -B build
+cmake --build build
+
+Запуск со **статической**:
+cmake -B build -DBUILD_SHARED_LIBS=OFF
+cmake --build build
+
+P.S. Cmake запускать через wsl/linux(конфликт с sys/time.h)
+
+Опция -DCMAKE_BUILD_TYPE управляет режимом компиляции:
+    **Debug** - добавляются отладочные символы, отключает оптимизации
+                используется при разработке.
+    **Release** - убирает отладочную информацию, включает оптимизации
+                  используется для финальной сборки.
+
+**На 5**\
+Coming soon... (or maybe not)
