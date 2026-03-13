@@ -35,4 +35,3 @@ P.S. Cmake запускать через wsl/linux(конфликт с sys/time.
 
 ### На 5
 **Coming soon...** (_or maybe not_)
-
