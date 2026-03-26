@@ -1,4 +1,11 @@
 *.exe
+*.out
+
+*.o
+*.a
+*.dll
+*.so
+
 *.dat
 *.rle
 
