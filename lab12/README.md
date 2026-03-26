@@ -2,24 +2,36 @@
 LIBS
 -
 
-**3 файла:**\
-*warehouse.h* - заголовочный файл, содержит описание структур и функций\
-*warehouse.c* - дополнительный файл, содержащий функции\
-*main.c* - основной файл, содержит основной код\
+## Структура лабы
 
-**Описание функций**\
-*fillArray* - заполняет массив\
-*printArray* - выводит таблицу\
-*bubbleSort* - сортирует пузырьком\
-*measureSort* - считает время
+```
+lab12/
+├── warehouse.h   — структуры и объявления функций
+├── warehouse.c   — реализация функций
+└── main.c        — основной файл
+```
 
-**Как запустить?**\
-with dynamic:
-'''gcc -c warehouse.c -o warehouse.o''' - компилирует в машинный код
-'''gcc -shared -o warehouse.dll warehouse.o''' - создает саму библиотеку
-'''gcc main.c -L. -lwarehouse -o dynamic.exe''' - компилирует main.c и связывает с библиотекой
+## Описание функций
 
-with static:
-''' gcc main.c warehouse.c -c '''
-''' ar r libMY_LOG.a warehouse.o main.o'''
-''' gcc main.o -L. -lMY_LOG -o static'''
+`fillArray` — заполняет массив структур\
+`printArray` — выводит таблицу на экран\
+`bubbleSort` — сортировка пузырьком\
+`measureSort` — замеряет время сортировки
+
+## Как запустить
+
+**Динамическая библиотека (.dll):**
+```bash
+gcc -c warehouse.c -o warehouse.o          # компилируем в объектный файл
+gcc -shared -o warehouse.dll warehouse.o   # создаём динамическую библиотеку
+gcc main.c -L. -lwarehouse -o dynamic.exe  # компилируем и линкуем с библиотекой
+./dynamic.exe
+```
+
+**Статическая библиотека (.a):**
+```bash
+gcc main.c warehouse.c -c                  # компилируем в объектные файлы
+ar r libMY_LOG.a warehouse.o main.o        # создаём статическую библиотеку
+gcc main.o -L. -lMY_LOG -o static.exe      # линкуем
+./static.exe
+```
