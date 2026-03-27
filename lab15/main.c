@@ -32,7 +32,7 @@ int read_csv(const char *filename, Employee **out_arr, int *out_count) {
         return -1;
     }
 
-    int capacity = 16, count = 0;
+    int capacity = 16, count = 0;       // for 16 emp
     Employee *arr = malloc(capacity * sizeof(Employee));
     if (!arr) { close(fd); return -1; }
 
@@ -41,8 +41,8 @@ int read_csv(const char *filename, Employee **out_arr, int *out_count) {
     int     line_len = 0;
     ssize_t n;
 
-    while ((n = read(fd, buf, sizeof(buf))) > 0) {
-        for (ssize_t i = 0; i < n; i++) {
+    while ((n = read(fd, buf, sizeof(buf))) > 0) {  //read in parts
+        for (ssize_t i = 0; i < n; i++) {           
             char c = buf[i];
 
             if (c == '\r') continue; 
@@ -59,10 +59,10 @@ int read_csv(const char *filename, Employee **out_arr, int *out_count) {
 
             // strtok
             char *name = line;
-            char *sep1 = strchr(name, ';');
+            char *sep1 = strchr(name, ';');  // found
             if (!sep1) { write_err("Warning: invalid line skipped.\n"); continue; }
-            *sep1 = '\0';
-            char *id_s = sep1 + 1;
+            *sep1 = '\0';                    // cut line
+            char *id_s = sep1 + 1;           // id after this
             char *sep2 = strchr(id_s, ';');
             if (!sep2) { write_err("Warning: invalid line skipped.\n"); continue; }
             *sep2 = '\0';
@@ -75,11 +75,11 @@ int read_csv(const char *filename, Employee **out_arr, int *out_count) {
                 arr = tmp;
             }
 
-            strncpy(arr[count].name,  name,  MAX_NAME  - 1);
+            strncpy(arr[count].name,  name,  MAX_NAME  - 1); // copy n char in stroke
             strncpy(arr[count].level, level, MAX_LEVEL - 1);
             arr[count].name[MAX_NAME   - 1] = '\0';
             arr[count].level[MAX_LEVEL - 1] = '\0';
-            arr[count].id = atoi(id_s);
+            arr[count].id = atoi(id_s); // ASCII to int
             count++;
         }
     }
@@ -146,13 +146,13 @@ void print_table(const Employee *arr, int count) {
 ////////////
 // ON 4: DB
 int save_database(const char *dbfile, const Employee *arr, int count) {
-    FILE *f = fopen(dbfile, "wb");
+    FILE *f = fopen(dbfile, "wb"); // write binary, dont text!
     if (!f) {
         fprintf(stderr, "Error: Failed to create '%s'\n", dbfile);
         return -1;
     }
-    if (fwrite(&count, sizeof(int), 1, f) != 1 ||
-        fwrite(arr, sizeof(Employee), count, f) != (size_t)count) {
+    if (fwrite(&count, sizeof(int), 1, f) != 1 ||        // count emp
+        fwrite(arr, sizeof(Employee), count, f) != (size_t)count) {  
         fprintf(stderr, "Database write error\n");
         fclose(f);
         return -1;
@@ -163,7 +163,7 @@ int save_database(const char *dbfile, const Employee *arr, int count) {
 }
 
 void search_by_id(const char *dbfile) {
-    FILE *f = fopen(dbfile, "rb");
+    FILE *f = fopen(dbfile, "rb");  // read binary
     if (!f) {
         fprintf(stderr, "Error: Failed to open '%s'\n", dbfile);
         return;
@@ -174,7 +174,7 @@ void search_by_id(const char *dbfile) {
         fclose(f);
         return;
     }
-    int target_id;
+    int target_id;              // type id
     printf("Enter the employee ID to search: ");
     if (scanf("%d", &target_id) != 1) {
         fprintf(stderr, "Invalid input\n");
@@ -184,11 +184,10 @@ void search_by_id(const char *dbfile) {
     Employee emp;
     int found = 0;
     for (int i = 0; i < count; i++) {
-        if (fread(&emp, sizeof(Employee), 1, f) != 1) break;
-        if (emp.id == target_id) {
+        if (fread(&emp, sizeof(Employee), 1, f) != 1) break; // read
+        if (emp.id == target_id) {                           // compare
             printf("\n[ The employee has been found ]\n");
-            printf("  Name:  %s\n  ID:    %d\n  Level: %s\n\n",
-                   emp.name, emp.id, emp.level);
+            printf("  Name:  %s\n  ID:    %d\n  Level: %s\n\n", emp.name, emp.id, emp.level);
             found = 1;
             break;
         }
@@ -199,38 +198,40 @@ void search_by_id(const char *dbfile) {
 }
 
 ////////////
-// ON 5: RLE
+// ON 5: RLE           
+// replace duplicate bytes to counter + value pair
 int compress_rle(const char *src, const char *dst) {
-    FILE *in = fopen(src, "rb");
+    FILE *in = fopen(src, "rb");    // original
     if (!in) { fprintf(stderr, "Opening error '%s'\n", src); return -1; }
-    FILE *out = fopen(dst, "wb");
+    FILE *out = fopen(dst, "wb");   // write rle
     if (!out) { fprintf(stderr, "Creation error '%s'\n", dst); fclose(in); return -1; }
 
-    int ch = fgetc(in);
+    int ch = fgetc(in);             // first bit
     while (ch != EOF) {
-        unsigned char  cur = (unsigned char)ch;
-        unsigned short cnt = 1;
+        unsigned char  cur = ch;
+        unsigned short cnt = 1;     // cnt 
         while (cnt < 0xFFFF) {
             int next = fgetc(in);
-            if (next == EOF || (unsigned char)next != cur) {
+            if (next == EOF || next != cur) {
                 if (next != EOF) ungetc(next, in);
                 break;
             }
             cnt++;
         }
-        if (fwrite(&cnt, sizeof(unsigned short), 1, out) != 1 ||
-            fwrite(&cur, sizeof(unsigned char),  1, out) != 1) {
+        if (fwrite(&cnt, sizeof(cnt), 1, out) != 1 ||   // cnt
+            fwrite(&cur, sizeof(cur),  1, out) != 1) {  // cur
             fprintf(stderr, "RLE write error\n");
             fclose(in); fclose(out);
             return -1;
         }
-        ch = fgetc(in);
+        ch = fgetc(in);             // next bit for new
     }
     fclose(in);
     fclose(out);
     return 0;
 }
 
+// read couple and turn them back
 int decompress_rle(const char *src, const char *dst) {
     FILE *in = fopen(src, "rb");
     if (!in) { fprintf(stderr, "Opening error '%s'\n", src); return -1; }
@@ -239,8 +240,8 @@ int decompress_rle(const char *src, const char *dst) {
 
     unsigned short cnt;
     unsigned char  val;
-    while (fread(&cnt, sizeof(unsigned short), 1, in) == 1 &&
-           fread(&val, sizeof(unsigned char),  1, in) == 1) {
+    while (fread(&cnt, sizeof(cnt), 1, in) == 1 &&
+           fread(&val, sizeof(val),  1, in) == 1) {
         for (unsigned short i = 0; i < cnt; i++) {
             if (fputc(val, out) == EOF) {
                 fprintf(stderr, "Write error while unpacking\n");
@@ -254,10 +255,10 @@ int decompress_rle(const char *src, const char *dst) {
     return 0;
 }
 
-long file_size(const char *path) {
+long file_size(const char *path) {     // size file
     FILE *f = fopen(path, "rb");
     if (!f) return -1;
-    fseek(f, 0, SEEK_END);
+    fseek(f, 0, SEEK_END);      
     long sz = ftell(f);
     fclose(f);
     return sz;
@@ -277,6 +278,7 @@ void print_compression_report(const char *orig, const char *compressed) {
     printf("Compression:  %.1f%%\n\n", ratio);
 }
 
+////////
 // MAIN
 int main(int argc, char *argv[]) {
     if (argc < 2) {
