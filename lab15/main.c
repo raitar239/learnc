@@ -84,34 +84,6 @@ int read_csv(const char *filename, Employee **out_arr, int *out_count) {
         }
     }
 
-    // last string
-    if (line_len > 0) {
-        line[line_len] = '\0';
-        char *name = line;
-        char *sep1 = strchr(name, ';');
-        if (sep1) {
-            *sep1 = '\0';
-            char *id_s = sep1 + 1;
-            char *sep2 = strchr(id_s, ';');
-            if (sep2) {
-                *sep2 = '\0';
-                char *level = sep2 + 1;
-                if (count == capacity) {
-                    capacity *= 2;
-                    Employee *tmp = realloc(arr, capacity * sizeof(Employee));
-                    if (!tmp) { free(arr); close(fd); return -1; }
-                    arr = tmp;
-                }
-                strncpy(arr[count].name,  name,  MAX_NAME  - 1);
-                strncpy(arr[count].level, level, MAX_LEVEL - 1);
-                arr[count].name[MAX_NAME   - 1] = '\0';
-                arr[count].level[MAX_LEVEL - 1] = '\0';
-                arr[count].id = atoi(id_s);
-                count++;
-            }
-        }
-    }
-
     if (n == -1) {
         write_err("Error: read() failed\n");
         free(arr); close(fd); return -1;
@@ -198,15 +170,15 @@ void search_by_id(const char *dbfile) {
 }
 
 ////////////
-// ON 5: RLE           
-// replace duplicate bytes to counter + value pair
-int compress_rle(const char *src, const char *dst) {
-    FILE *in = fopen(src, "rb");    // original
-    if (!in) { fprintf(stderr, "Opening error '%s'\n", src); return -1; }
+// ON 5: RLE                                                                                    [4][A][2][B]
+// replace duplicate bytes to counter + value pair                                              [A][A][A][A][B][B]
+int compress_rle(const char *src, const char *dst) {                                            
+    FILE *in = fopen(src, "rb");    // original                                                 
+    if (!in) { fprintf(stderr, "Opening error '%s'\n", src); return -1; }                       
     FILE *out = fopen(dst, "wb");   // write rle
     if (!out) { fprintf(stderr, "Creation error '%s'\n", dst); fclose(in); return -1; }
 
-    int ch = fgetc(in);             // first bit
+    int ch = fgetc(in);             // first byte
     while (ch != EOF) {
         unsigned char  cur = ch;
         unsigned short cnt = 1;     // cnt 
@@ -218,13 +190,13 @@ int compress_rle(const char *src, const char *dst) {
             }
             cnt++;
         }
-        if (fwrite(&cnt, sizeof(cnt), 1, out) != 1 ||   // cnt
-            fwrite(&cur, sizeof(cur),  1, out) != 1) {  // cur
+        if (fwrite(&cnt, sizeof(cnt), 1, out) != 1 ||   // write cnt (2 byte) 
+            fwrite(&cur, sizeof(cur),  1, out) != 1) {  // write cur (1 byte) 
             fprintf(stderr, "RLE write error\n");
             fclose(in); fclose(out);
             return -1;
         }
-        ch = fgetc(in);             // next bit for new
+        ch = fgetc(in);             // next byte for new
     }
     fclose(in);
     fclose(out);
@@ -288,10 +260,10 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    const char *csv_file = argv[1];
-    const char *db_file  = "database.dat";
-    const char *rle_file = "database.rle";
-    const char *dec_file = "database_restored.dat";
+    char *csv_file = argv[1];
+    char *db_file  = "database.dat";
+    char *rle_file = "database.rle";
+    char *dec_file = "database_restored.dat";
 
     // 3
     Employee *employees = NULL;
