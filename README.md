@@ -18,6 +18,7 @@ One and two semesters
 | [Lab 13](./lab13) | Build Systems |
 | [Lab 14](./lab14) | Linked Lists |
 | [Lab 15](./lab15) | Files |
+| [Lab 15.5](./lab15.5) | Debugger |
 
 ---
 
