@@ -1,10 +1,3 @@
-// Ожидаемый вывод:
-/*
-=== Test 5: Key Generation ===
-// Здесь у вас будет два разных ключа
-*/
-
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
