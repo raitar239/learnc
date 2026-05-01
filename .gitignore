@@ -1,5 +1,6 @@
 *.exe
 *.out
+!*.*
 
 *.o
 *.a
@@ -9,4 +10,5 @@
 *.dat
 *.rle
 
-**/build/
+build/
+bin/
