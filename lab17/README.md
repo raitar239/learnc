@@ -1,19 +1,54 @@
-Берем код с гитхаба: https://github.com/Gabe3231/C-Calculator
-Немного переделываем: функции переносим в файлы `calculator.cpp` и `calculator.h` и меняем их тип на `int`, чтобы было возможно тестировать; логику переносим в main.cpp
+**ЛАБОРАТОРНАЯ РАБОТА 17**
+TESTING
+-
 
-Для тестирования используем фреймворк Google Test.
-Пишем по 2 `EXPECT_EQ` на каждую функцию. Итого получилось 4 теста.
-
-Для сборки используем Cmake:
-Импортируем `Google Test`
-```cmake
-include(FetchContent)
-FetchContent_Declare(
-  googletest
-  GIT_REPOSITORY https://github.com/google/googletest.git
-  GIT_TAG v1.14.0 
-  DOWNLOAD_EXTRACT_TIMESTAMP TRUE
-)
-FetchContent_MakeAvailable(googletest)
+## Структура проекта
 ```
-Далее линкуем библиотеку и приложение и запускаем тесты
+lab17/
+├── CMakeLists.txt
+├── images
+│   └── 1.png
+├── src
+│   ├── calculator.cpp
+│   ├── calculator.h
+│   └── main.cpp
+└── tests
+    └── test_calculator.cpp
+```
+
+---
+
+## Обзор
+В данной работе реализовано модульное тестирование калькулятора на языке C++. За основу был взяят репозиторий [C-Calculator](https://github.com/Gabe3231/C-Calculator), который был немного переделан и разделен на файлы, для осуществления тестирования:
+*  `calculator.h` / `calculator.cpp`: математические функции (add, sub, mul, div). Типы возвращаемых значений изменены на `int` для проверки результатов.
+*  `main.cpp`: логика взаимодействия с пользователем.
+
+---
+
+## Тестирование
+Используется фреймворк **`Google Test`**. Написано 4 набора тестов, проверяющих корректность функций. На каждую функцию реализовано по 2 проверки `EXPECT_EQ`.
+
+**Пример теста:**
+```c++
+TEST(CalculatorTest, Addition) {
+    EXPECT_EQ(add(2, 2), 4);  
+    EXPECT_EQ(add(-1, 5), 4);
+}
+```
+
+---
+
+## Сборка через CMake
+Сборка проекта автоматизирована через **`CMake`**. Фреймворк `Google Test` подтягивается автоматически из репозитория GitHub во время конфигурации.
+
+---
+
+## Запуск
+1. Конфигурация: `cmake -B build`
+2. Сборка: `cmake --build build`
+3. Запуск тестов: `.\build\Debug\unit_tests.exe`
+
+---
+
+## Демонстрация работы
+![Image 1](./images/1.png)
