@@ -37,7 +37,7 @@ TEST(CalculatorTest, Addition) {
 ## Запуск
 1. Конфигурация: `cmake -B build`
 2. Сборка: `cmake --build build`
-3. Запуск тестов: `.\build\Debug\unit_tests.exe`
+3. Запуск тестов: `.\build\Debug\unit_tests.exe` или `./build/unit_tests`
 
 ## Демонстрация работы
 ![Image 1](./images/1.png)
