@@ -110,7 +110,7 @@ void applyBlur(Canvas& canvas) {
     }
 }
 
-// ========== Вспомогательная отрисовка (SFML 3.1 compatible) ==========
+// ========== render ==========
 void renderToWindow(sf::RenderWindow& window, const Canvas& canvas) {
     static sf::Image image;
     static sf::Texture texture;
