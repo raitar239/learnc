@@ -21,6 +21,7 @@ One and two semesters
 | [Lab 15.5](./lab15.5) | Debugger |
 | [Lab 16](./lab16) | Threads |
 | [Lab 17](./lab17) | Tests |
+| [Lab 18](./lab18) | C++ |
 
 ---
 
